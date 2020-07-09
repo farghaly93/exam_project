@@ -1,0 +1,120 @@
+.check {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+      .step {
+        display: flex;
+        flex-direction: column;
+        margin: 30px;
+        .facheck {
+          background-color: rgb(94, 95, 94);
+          padding: 23px;
+          height: 100px;
+          width: 100px;
+          border-radius: 80px;
+          font-size: 40px;
+          color: #fff;
+          border: 0px;
+        }
+      }
+      .checked {
+        display: flex;
+        flex-direction: column;
+        margin: 30px;
+        .facheck {
+          background-color: rgb(65, 141, 62);
+        }
+      }
+      .points {
+        margin-top: 50px;
+        font-size: 47px;
+        color: rgb(15, 63, 45);
+      }
+  }
+
+
+
+.quantity {
+    float: left;
+    margin-right: 15px;
+    background-color: #eee;
+    position: relative;
+    width: 80px;
+    overflow: hidden
+}
+
+.quantity input {
+    margin: 0;
+    text-align: center;
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    float: right;
+    color: #000;
+    font-size: 20px;
+    border: 0;
+    outline: 0;
+    background-color: #F6F6F6
+}
+
+.quantity input.qty {
+    position: relative;
+    border: 0;
+    width: 100%;
+    height: 40px;
+    padding: 10px 25px 10px 10px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 15px;
+    border-radius: 0;
+    background-clip: padding-box
+}
+
+.quantity .minus, .quantity .plus {
+    line-height: 0;
+    background-clip: padding-box;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-background-size: 6px 30px;
+    -moz-background-size: 6px 30px;
+    color: #bbb;
+    font-size: 20px;
+    position: absolute;
+    height: 50%;
+    border: 0;
+    right: 0;
+    padding: 0;
+    width: 25px;
+    z-index: 3
+}
+
+.quantity .minus:hover, .quantity .plus:hover {
+    background-color: #dad8da
+}
+
+.quantity .minus {
+    bottom: 0
+}
+.shopping-cart {
+    margin-top: 20px;
+}
+ .nav {
+   margin: 20px;
+   .btns {
+    margin-left: auto;
+    margin-right: auto;
+    button {
+      background-color: #566c86c2;
+      padding: 5px 60px;
+      color: #fff;
+      font-weight: bold;
+    }
+    .active {
+      background-color: #020c18c2;
+    }
+   }
+ }
