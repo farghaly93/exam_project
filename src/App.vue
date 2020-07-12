@@ -47,7 +47,6 @@
 <style scope lang="scss">
   body, html {
     /* padding: 5px; */
-    text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
   .chat {

@@ -226,7 +226,7 @@ export default {
             justify-items: start;
             align-content: center;
             input p{
-                flex: 4;
+                flex: 1;
             }
         }
     }
