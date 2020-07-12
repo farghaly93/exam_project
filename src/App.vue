@@ -1,21 +1,17 @@
 <template>
   <div id="app">
-        <app-register v-if="showModal" />
+    <app-register v-if="showModal" />
     <v-app  id="inspire">
       <router-view name="header"/>
-      <div class="">
         <transition name="slide" mode="out-in">
-          <router-view style="margin-bottom:120px;margin-right:10px;margin-left:10px;"></router-view>
+          <router-view ></router-view>
         </transition>
-      </div>
-            
+      <router-view name="footer"/>    
     </v-app>
   </div>
 </template>
 
 <script>
-  import Header from './components/header/header.vue'
-  import Footer from './components/footer.vue'
   import axios from 'axios'
   import AppRegister from './components/register.vue'
 
@@ -32,17 +28,12 @@
       }
     },
     computed: {
-      tags() {
-        return this.$store.getters.tags;
-      },
       showModal() {
         return this.$store.getters.showModal;
    },
     },
     name: 'app',
     components: {
-      'app-header': Header,
-      appFooter: Footer,
       AppRegister
     },
     watch: {

@@ -19,12 +19,12 @@
                 :color="grade.userId === userId?'#7abfbb6e':'#dee2e875'"
               >
               <v-card-subtitle style="color:#463333;font-weight:bolder">{{grade.username}}</v-card-subtitle>
-              <v-card-text>{{grade.mark+ '/' + grade.fullMark}}</v-card-text>
+              <v-card-text>{{grade.mark+ '/' + (grade.fullMark>0?grade.fullMark:'0')}}</v-card-text>
               <v-progress-linear
-                :value="(grade.mark/grade.fullMark)*100"
+                :value="Math.floor((grade.mark/+(grade.fullMark>0?grade.fullMark:1))*100)"
                 height="17"
               >
-                <strong>{{ Math.ceil((grade.mark/grade.fullMark)*100) }}%</strong>
+                <strong style="color:#fff">{{ Math.floor((grade.mark/(grade.fullMark>0?grade.fullMark:1))*100) }}%</strong>
               </v-progress-linear>
             </v-card>
           </div>
@@ -38,13 +38,13 @@ export default {
       axios.get('/getUsersExam/'+localStorage.getItem('stage')).then(res => {
         this.users = res.data.users;
         [...this.users].forEach(user => {
-          axios.get('/getStudentExams/'+user._id).then(res => {
+          axios.get('/getCorrectedStudentExams/'+user._id).then(res => {
             const userMarks = {username: user.fullname, userId: user._id, mark: 0, fullMark: 0}
             res.data.exams.forEach(exam => {
                exam.solution.sections.forEach(section => {
                  section.questions.forEach(question => {
-                   userMarks.mark += +question.degree;
-                   userMarks.fullMark += +question.fullDegree;
+                   userMarks.mark += +question.degree || 0;
+                   userMarks.fullMark += +question.fullDegree || 0;
                 })
               })
             });
@@ -68,7 +68,7 @@ export default {
         return this.$store.getters.drawer2;
       },
       userId() {
-        return this.$store.getters.userId;
+        return localStorage.getItem('userId');
       }
     }
 }

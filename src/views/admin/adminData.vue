@@ -39,6 +39,18 @@
 <script>
 import axios from 'axios'
 export default {
+    created() {
+        axios.get('/getAdminData').then(res => {
+            this.name = res.data.adminData.name;
+            this.phone = res.data.adminData.phone;
+            this.address = res.data.adminData.address;
+            this.career = res.data.adminData.career;
+            this.facebook = res.data.adminData.facebook;
+            this.gmail = res.data.adminData.gmail;
+            this.email = res.data.adminData.email;
+            this.imageUrl = res.data.adminData.imageUrl;
+        });
+    },
     data() {
         return {
             name: '',
@@ -72,10 +84,3 @@ export default {
     }
 }
 </script>
-
-
-
-
-
-
-

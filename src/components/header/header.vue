@@ -16,7 +16,7 @@
         <v-toolbar-title class="links">
           <h5 style="cursor:pointer" to="" v-if="!token" class="link"  @click="openRegisterModal"><strong>Register</strong></h5>
           <router-link active-class="active" class="link" v-if="role==='1'" to="/dashboard"><strong>Dashboard</strong></router-link>
-          <router-link active-class="active" class="link" to="/updateUserInfo/upd"><strong>{{username}}</strong></router-link>
+          <router-link active-class="active" class="link" to="/updateUserInfo/upd"><strong style="font-size:16px;">{{username}}</strong></router-link>
           <v-icon class="link" v-if="token" @click="logout">mdi-logout</v-icon>
         </v-toolbar-title>
 

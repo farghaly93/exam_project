@@ -1,21 +1,23 @@
 
 <template>
     <div>
-        <div class="stage">
-            <label>Select stage</label>
-            <select class="form-control" v-model="stage">
-                <option value="one">One</option>
-                <option value="two">Two</option>
-                <option value="three">Three</option>
-            </select>
-        </div>
-        <div class="number">
-            <label>Exam number</label>
-            <input class="form-control" type="number" v-model="number" />
-        </div>
-        <div>
-            <label>Number of Questions sections</label>
-            <input class="form-control" type="number" min="1" max="10" v-model.number="numberOfQuestionsSections"/>
+        <div class="row">
+            <div class="stage col-md-4">
+                <label>Select stage</label>
+                <select class="form-control" v-model="stage">
+                    <option value="one">One</option>
+                    <option value="two">Two</option>
+                    <option value="three">Three</option>
+                </select>
+            </div>
+            <div class="number col-md-4">
+                <label>Exam number</label>
+                <input class="form-control" type="number" v-model="number" />
+            </div>
+            <div class="col-md-4">
+                <label>Number of Questions sections</label>
+                <input class="form-control" type="number" min="1" max="10" v-model.number="numberOfQuestionsSections"/>
+            </div>
         </div>
         <div v-if="edit" class="questionsSection">
             <h2>Edit exam1</h2>
@@ -25,7 +27,7 @@
             <questions-section @concatArraysOfQuestions="concatArraysOfQuestionsHandler" v-for="quesSec in numberOfQuestionsSections" :key="quesSec"/>
         </div>
         <Loading v-if="loading"/>
-        <button @click="addExam">Add exam</button>
+        <button style="padding:12px 70px;" class="btn btn-primary" @click="addExam">Add exam</button>
     </div>
 </template>
 
@@ -34,6 +36,7 @@ import axios from 'axios'
 import QuestionsSection from '../../components/admin/QuestionsSection.vue'
 import EditExam from '../../components/admin/editExam.vue'
 import Loading from '../../components/loading.vue'
+import { eventBus } from '../../main.js'
 export default {
     created() {
         if(this.$route.params.id) {
@@ -78,12 +81,14 @@ export default {
     },
     methods: {
         concatArraysOfQuestionsHandler(questions) {
-            console.log(questions);
+            console.log('questions', questions);
             this.allQuestions.push(questions);
             this.allQuestions = [...new Set(this.allQuestions)];
         },
         addExam() {
             this.loading = true;
+            eventBus.$emit('collectQuestions');
+            //console.log(this.allQuestions);
             const exam = {year: new Date().getFullYear(), stage: this.stage, number: this.number, sections: this.allQuestions};
             if(this.edit) { 
                 axios.post('/editExam/'+this._id, exam).then(res => {
@@ -98,6 +103,7 @@ export default {
                 this.allQuestions = [];
                 this.loading = false;
                 this.$store.dispatch('writemessage', 'Exam uploaded succefully');
+                console.log(res.data.done);
             })
         }
     }

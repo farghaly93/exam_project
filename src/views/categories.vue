@@ -1,11 +1,12 @@
 <template>
     <div>
-        <div class="overlay">
-            <img :src="adminData.imageUrl"/>
+        <div style="position:absolute;height:100%;width:100%;background-color:yellow">
+            <img height="100%" width="100%" :src="adminData.imageUrl"/>
         </div>
-        <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <div class="overlay"></div>
+        <!-- <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
             <source src="../mp4/bg.mp4" type="video/mp4">
-        </video>
+        </video> -->
 
         <div class="masthead">
             <div class="masthead-bg"></div>
@@ -18,8 +19,8 @@
                             <p class="mb-5">{{adminData.address}}</p>
                             <p class="mb-5">{{adminData.career}}</p>
                             <div class="input-group input-group-newsletter">
-                            <div class="input-group-append">
-                                <button @click="()=>{this.$router.push('/exam')}" class="btn btn-secondary" type="button" id="submit-button">دخول</button>
+                            <div style="padding:39.5px 0px;width:100%;">
+                                <button style="width:100%" @click="()=>{this.$router.push('/exam')}" class="btn btn-primary" type="button" id="submit-button"><strong style="font-size:28px;">Go..</strong></button>
                             </div>
                             </div>
                         </div>
@@ -31,7 +32,7 @@
         <div class="social-icons">
             <ul class="list-unstyled text-center mb-0">
             <li class="list-unstyled-item">
-                <a blank :href="adminData.gmail">
+                <a  style="background-color: red" target="_blank" :href="adminData.gmail">
                 <i class="fab fa-google"></i>
                 </a>
             </li>
@@ -41,7 +42,7 @@
                 </a>
             </li>
             <li class="list-unstyled-item">
-                <a blank :href="adminData.email">
+                <a target="_blank" :href="adminData.email">
                 <i class="fab fa-email"></i>
                 </a>
             </li>

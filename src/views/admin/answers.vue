@@ -6,26 +6,26 @@
                     <input @input="search" type="text" placeholder="search" />
                     <i class="fa fa-search"></i>
                 </div>
-                <v-select 
+                <v-select
+                    style="color:#fff"
                     v-model="stage"
                     :items="['one', 'two', 'three']"
                 />
-                <ul class="list">
-                    <li :class="lastExamStudents.includes(user._id)?'':'absent'" @click="() => {getExams(user._id)}" :key="i" v-for="(user, i) in filteredUsers" class="clearfix">
-                    <div class="about">
-                        <div class="name">{{user.fullname.split('@')[0]}}</div>
-                        <div class="status">
-                        <i class="fa fa-circle online"></i> ({{user.phone}})
+                <ul>
+                    <li @click="() => {getExams(user._id, user.fullname)}" :key="i" v-for="(user, i) in filteredUsers" class="clearfix">
+                        <div :class="lastExamStudents.includes(user._id)?'about':'absent'">
+                            <div class="name">{{user.fullname.split('@')[0]}}</div>
+                            <p style="color:#fff">({{user.phone}})</p>
                         </div>
-                    </div>
                     </li>
                 </ul>
             </div>
         
             <div class="chatt col-md-9">
-                <section v-if="isStudentExam">
+                <section class="examToCorrect" v-if="isStudentExam">
                     <v-system-bar/>
                     <div style="text-align:center;margin-bottom:30px;color:#6b364a;font-weight:bold">
+                        <h3 style="color:#555;font-weight:bold;">{{username}}</h3>
                         <h3>Exam {{exam.solution.number}}</h3>
                         <h4>{{exam.solution.stage}} Stage Year {{exam.solution.year}}</h4>
                         <h2 style="color:red">{{mark}} / {{fullMark}}</h2>
@@ -34,18 +34,29 @@
                         <h4 style="margin:20px;text-decoration:underline;color:#555">{{section.type}}</h4>
                         <div style="margin-left: 40px;" v-for="(question, q) in section.questions" :key="q"  class="question">
                             <h3>{{question.question}}?</h3>
-                            <h4 style="font-weight:bold;color:#2f6b3f;margin-left:20px;">{{question.answer}}</h4>
-                            <input @change="calculateMark()" type="number" v-model="question.degree" placeholder="degree" min="0" :max="question.fullDegree"><p>{{question.fullDegree}}</p>
-                            <input style="color:#da4545;font-weight:bold" type="text" v-model="question.correction" placeholder="correction"/>
+                            <div style="display:flex;flex-direction:row;justify-content: space-between">
+                                <h4 style="font-weight:bold;color:#2f6b3f;margin-left:20px;">{{question.answer}}</h4>
+                                <div class="degree">
+                                    <input @change="calculateMark()" type="number" v-model="question.degree" placeholder="degree" min="0" :max="question.fullDegree">
+                                    <p>___</p>
+                                    <p>{{question.fullDegree}}</p>
+                                </div>
+                            </div>
+                            <input style="color:#da4545;font-weight:bold" type="text" v-model="question.correction" placeholder="correction"/>                     
                         </div>
                     </div>
                     <button @click="submitCorrection" type="button" class="btn btn-primary">Submit correction</button>
                     <v-divider/>
                 </section>
-                <section v-if="!isStudentExam">
-                    <div class="exam" :class="exam.done?'done':'toCorrect'" @click="()=>{getAnswers(exam)}" v-for="(exam, i) in exams" :key="i">
-                        <h3>Stage {{exam.solution.stage}}</h3>
-                        <h3>Year {{exam.solution.year}}</h3>
+                <section class="studentExams" v-if="!isStudentExam">
+                     <div
+                        class="exam"
+                        :class="exam.done?'done':'toCorrect'" 
+                        @click="()=>{getAnswers(exam)}" 
+                        v-for="(exam, i) in exams" 
+                        :key="i"
+                        >
+                        <p>Exam number ({{exam.solution.number}})</p>
                     </div>
                 </section>
             </div>
@@ -70,7 +81,8 @@ export default {
             months: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             users: [],
             filteredUsers: [],
-            lastExamStudents: []
+            lastExamStudents: [],
+            username: ''
         }
     },
     computed: {
@@ -110,8 +122,9 @@ export default {
             this.filteredUsers = [...filtered];
             console.log(event.target.value, filtered)
         },
-        getExams(id) {
+        getExams(id, username) {
             this.userId = id;
+            this.username = username;
             this.isStudentExam = false;
             axios.get('/getStudentExams/'+id).then(res => {
                 this.exams = res.data.exams;
@@ -165,7 +178,56 @@ export default {
        color: #fff;
        text-align: center;
    }
-   .absent {
-       background-color: rgb(243, 62, 62)
-   }
+    .clearfix {
+        .absent {
+            background-color: rgb(165, 75, 75);
+            padding: 2px 12px;
+            border-radius: 15px;
+            border: solid 1px rgb(148, 25, 31);
+            width: 100%;
+        }
+        .about {
+            background-color: rgb(62, 112, 121);
+            padding: 2px 12px;
+            border-radius: 15px;
+            border: solid 1px rgb(13, 60, 66);
+             width: 100%;
+        }
+    }
+    .studentExams {
+        text-align: center;
+        .exam {
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+            padding: auto;
+            border-radius: 15px;
+            color: #fff;
+            margin-top: 10px;
+            padding: 5px 0px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .done {
+            background-color:rgb(71, 136, 87);
+            border: 1px solid rgb(7, 71, 7);
+        }
+        .toCorrect {
+            background-color:rgb(109, 135, 207);
+            border: 1px solid rgb(32, 56, 121);
+        }
+    }
+    .examToCorrect {
+        .degree {
+            color:red;
+            font-size: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-items: start;
+            align-content: center;
+            input p{
+                flex: 4;
+            }
+        }
+    }
 </style>

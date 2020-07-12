@@ -6,6 +6,7 @@ import Exam from '../views/exam.vue'
 import MainDashboard from '../views/admin/mainDashboard.vue'
 import Redirector from '../views/redirector.vue'
 import Header from '../components/header/header.vue'
+import Footer from '../components/footer.vue'
 import AddExam from '../views/admin/addExam.vue'
 import Register from '../components/register.vue'
 import Users from '../views/admin/users.vue'
@@ -18,7 +19,7 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', component: Categories  },
-  { path: '/exam', components: {default: Exam, 'header': Header}
+  { path: '/exam', components: {default: Exam, 'header': Header, 'footer': Footer}
   , beforeEnter: (to, from, next) => {
     if(localStorage.getItem('token')) {
       if(localStorage.getItem('role') == 1) {
@@ -30,8 +31,8 @@ const routes = [
         next('/');
     }
   } },
-  { path: '/register', components: {default: Register, 'header': Header}},
-  { path: '/updateUserInfo/:update', components: {default: Register, 'header': Header}},
+  { path: '/register', components: {default: Register, 'header': Header, 'footer': Footer}},
+  { path: '/updateUserInfo/:update', components: {default: Register, 'header': Header, 'footer': Footer}},
   //{ path: '/redirector/:path', component: Redirector },
   
   { path: '/dashboard',
