@@ -88,7 +88,7 @@
         <div v-for="(section, s) in exam.sections" :key="s" class="section">
             <h4 style="margin:20px;text-decoration:underline;color:#555">{{section.type}}</h4>
             <div style="margin-left: 40px;" v-for="(question, q) in section.questions" :key="q"  class="question">
-                <h3><strong>{{q+1}}</strong>-{{question.question}}?</h3>
+                <strong>{{q+1}}</strong>-<h5>{{question.question}}?</h5>
                 <v-textarea
                  v-if="question.choices.length===0"
                  v-model="solutionModel.sections[s].questions[q].answer"
@@ -126,7 +126,8 @@
     export default {
         created() {
             this.loading = true;
-            axios.get('/fetchExamForUser/'+new Date().getFullYear()+'/'+this.stage).then(res => {
+            axios.get('/fetchExamForUser/'+this.stage).then(res => {
+                console.log(res.data)
                 if(res.data.exam.length > 0) {
                     this.exam = res.data.exam[0];
                     const examModel = {...this.exam};
@@ -249,7 +250,8 @@
                 }
             },
             sendAnswers() {
-                if(this.examDone) return; 
+                if(this.examDone) return;
+                this.examDone = true;
                 axios.post('/sendSolution', {
                     userId: this.$store.getters.userId,
                     examId: this.exam._id,
@@ -260,6 +262,8 @@
                         localStorage.removeItem('timer');
                         this.getUserPreviousExams();
                         this.$store.dispatch('writemessage', 'You sent your answers successfully...')
+                    } else {
+                        this.examDone = false;
                     }
                 })
             },

@@ -11,7 +11,7 @@
         <div class="Year">
             <label>Select Year</label>
             <select @change="filterExams" class="form-control" v-model="year">
-                <option v-for="y in years" :key="y" :value="y">{{y}}</option>
+                <option v-for="y in years" :key="y" :value="y">{{y}}/{{y+1}}</option>
             </select>
         </div>
         <app-modal v-if="modal">
@@ -110,7 +110,7 @@ export default {
         },
         deleteExam() {
             if(this.$refs.password.value === 'confirm') {
-                axios.get('/deleteExam/'+this.examId).then(res => {
+                axios.get('/deleteExam/'+this.examId+'/'+this.year).then(res => {
                     this.exams = res.data.exams
                     this.modal = false;
                 });

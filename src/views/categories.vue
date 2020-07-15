@@ -32,18 +32,18 @@
         <div class="social-icons">
             <ul class="list-unstyled text-center mb-0">
             <li class="list-unstyled-item">
-                <a  style="background-color: red" target="_blank" :href="adminData.gmail">
+                <a  style="background-color: rgb(236, 24, 24)" target="_blank" :href="adminData.gmail">
                 <i class="fab fa-google"></i>
                 </a>
             </li>
             <li class="list-unstyled-item">
-                <a target="_blank" :href="adminData.facebook">
+                <a style="background-color:rgb(35, 70, 115)" target="_blank" :href="adminData.facebook">
                 <i class="fab fa-facebook-f"></i>
                 </a>
             </li>
             <li class="list-unstyled-item">
-                <a target="_blank" :href="adminData.email">
-                <i class="fab fa-email"></i>
+                <a style="background-color:rgb(24, 140, 216)" target="_blank" :href="adminData.email">
+                <i class="fab fa-twitter"></i>
                 </a>
             </li>
             </ul>

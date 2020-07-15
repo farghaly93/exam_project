@@ -2,7 +2,14 @@
 <template>
     <div>
         <div class="row">
-            <div class="stage col-md-4">
+            <div class="col-md-3">
+                <label>السنة الدراسية</label>
+                <div class="row">
+                    <input class="form-control col-md-6" min="2020" type="number" v-model.number="year" />
+                    <p class="col-md-6">/{{year+1}}</p> 
+                </div>
+            </div>
+            <div class="stage col-md-3">
                 <label>Select stage</label>
                 <select class="form-control" v-model="stage">
                     <option value="one">One</option>
@@ -10,11 +17,11 @@
                     <option value="three">Three</option>
                 </select>
             </div>
-            <div class="number col-md-4">
+            <div class="number col-md-3">
                 <label>Exam number</label>
-                <input class="form-control" type="number" v-model="number" />
+                <input class="form-control" type="number" v-model.number="number" />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label>Number of Questions sections</label>
                 <input class="form-control" type="number" min="1" max="10" v-model.number="numberOfQuestionsSections"/>
             </div>
@@ -66,7 +73,8 @@ export default {
             edit: false,
             _id: '',
             number: 1,
-            loading: false
+            loading: false,
+            year: 2020
         }
     },
     watch: {
@@ -74,6 +82,11 @@ export default {
             for(let i=0;i<val; i++) {
                 this.sections[i] = this.sections[i] || {type: '', questions: [{question: '', choices: []}]};
             }
+        },
+        stage(val) {
+            axios.get('/filterExams/'+this.year+'/'+val).then(res => {
+                this.number = res.data.exams.length+1;
+            })
         }
     },
     computed: {
@@ -89,7 +102,7 @@ export default {
             this.loading = true;
             eventBus.$emit('collectQuestions');
             //console.log(this.allQuestions);
-            const exam = {year: new Date().getFullYear(), stage: this.stage, number: this.number, sections: this.allQuestions};
+            const exam = {year: this.year, stage: this.stage, number: this.number, sections: this.allQuestions};
             if(this.edit) { 
                 axios.post('/editExam/'+this._id, exam).then(res => {
                     this.$store.dispatch('writemessage', 'Exam uploaded succefully');

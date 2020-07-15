@@ -13,7 +13,7 @@ import "../node_modules/popper.js/dist/popper.min.js"
 import "../node_modules/jquery/dist/jquery.min.js"
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import vuetify from './plugins/vuetify';
-const url = 'https://movies-corner.herokuapp.com';
+const url = 'https://germany-exam.herokuapp.com';
 const url2 = 'http://localhost:3001'
 
 const options = {

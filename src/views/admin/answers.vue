@@ -27,17 +27,19 @@
                     <div style="text-align:center;margin-bottom:30px;color:#6b364a;font-weight:bold">
                         <h3 style="color:#555;font-weight:bold;">{{username}}</h3>
                         <h3>Exam {{exam.solution.number}}</h3>
-                        <h4>{{exam.solution.stage}} Stage Year {{exam.solution.year}}</h4>
+                        <h4><strong>Stage </strong>{{exam.solution.stage}} </h4>
+                        <h4><strong>Education year </strong>{{exam.solution.year}}/{{exam.solution.year+1}}</h4>
                         <h2 style="color:red">{{mark}} / {{fullMark}}</h2>
                     </div>
                     <div v-for="(section, s) in exam.solution.sections" :key="s" class="section">
                         <h4 style="margin:20px;text-decoration:underline;color:#555">{{section.type}}</h4>
                         <div style="margin-left: 40px;" v-for="(question, q) in section.questions" :key="q"  class="question">
-                            <h3>{{question.question}}?</h3>
+                            <strong>{{q}}-</strong><h4>{{question.question}}?</h4>
                             <div style="display:flex;flex-direction:row;justify-content: space-between">
-                                <h4 style="font-weight:bold;color:#2f6b3f;margin-left:20px;">{{question.answer}}</h4>
+                                <h5 style="font-weight:bold;color:#2f6b3f;margin-left:20px;">{{question.answer}}</h5>
                                 <div class="degree">
-                                    <input @change="calculateMark()" type="number" v-model="question.degree" placeholder="degree" min="0" :max="question.fullDegree">
+                                    <integer-plusminus @change="calculateMark()" v-model="question.degree" :min="0" :max="question.fullDegree" :value="0" :increment-aria-label="'increase by 1'" :decrement-aria-label="'decrease by 1'" :spin-button-aria-label="'example two'"></integer-plusminus>
+
                                     <p>___</p>
                                     <p>{{question.fullDegree}}</p>
                                 </div>
@@ -67,9 +69,12 @@
 </template>
 <script>
 import axios from 'axios';
-
+import IntegerPlusminus from '../../components/admin/IntegerPlusMinus'
 export default {
     created() {},
+    components: {
+        IntegerPlusminus
+    },
     data() {
         return {
             exam: {},

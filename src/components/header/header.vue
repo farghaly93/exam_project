@@ -35,9 +35,6 @@ export default {
     console.log('message' , this.token);
   },
  created() {
-   axios.get('/fetchCats').then(res => {
-     this.cats = [...res.data.cats];
-   })
  },
  data() {
    return {
