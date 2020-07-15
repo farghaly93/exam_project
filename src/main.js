@@ -32,7 +32,7 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(VueHtmlToPaper, options);
 Vue.use(Vuelidate);
-axios.defaults.baseURL = url2;
+axios.defaults.baseURL = url;
 axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
 Vue.config.productionTip = false
 
