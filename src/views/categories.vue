@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="position:absolute;height:100%;width:100%;background-color:yellow">
-            <img height="100%" width="100%" :src="adminData.imageUrl"/>
+            <!-- <img height="100%" width="100%" :src="adminData.imageUrl"/> -->
         </div>
         <div class="overlay"></div>
         <!-- <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
