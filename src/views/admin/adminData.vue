@@ -1,36 +1,48 @@
 <template>
     <v-container>
+        <v-label>Site name</v-label>
+        <v-text-field
+            placeholder="Site name"
+            v-model = "siteName"
+        />
+        <v-label>Name</v-label>
         <v-text-field
             placeholder="Name"
             v-model = "name"
         />
+        <v-label>Phone number</v-label>
         <v-text-field
             placeholder="Phone"
             v-model = "phone"
         />
+        <v-label>Address</v-label>
         <v-text-field
-            placeholder="Addresse"
+            placeholder="Address"
             v-model = "address"
         />
+        <v-label>Career</v-label>
         <v-text-field
             placeholder="Career"
             v-model = "career"
         />
+        <v-label>Facebook</v-label>
         <v-text-field
             placeholder="Facebook"
             v-model = "facebook"
         />
+        <v-label>Linkedin</v-label>
         <v-text-field
-            placeholder="Gmail"
-            v-model = "gmail"
+            placeholder="Linkedin"
+            v-model = "twitter"
         />
+        <v-label>Email</v-label>
         <v-text-field
             placeholder="Email"
             v-model = "email"
         />
         <v-text-field
-            placeholder="Iamge Url"
-            v-model = "imageUrl"
+            placeholder="Whatsapp"
+            v-model = "whatsapp"
         />
         <v-btn @click="submit">Update</v-btn>
     </v-container>
@@ -41,31 +53,34 @@ import axios from 'axios'
 export default {
     created() {
         axios.get('/getAdminData').then(res => {
+            this.siteName = res.data.adminData.siteName;
             this.name = res.data.adminData.name;
             this.phone = res.data.adminData.phone;
             this.address = res.data.adminData.address;
             this.career = res.data.adminData.career;
             this.facebook = res.data.adminData.facebook;
-            this.gmail = res.data.adminData.gmail;
+            this.gmail = res.data.adminData.linkedin;
             this.email = res.data.adminData.email;
-            this.imageUrl = res.data.adminData.imageUrl;
+            this.whatsapp = res.data.adminData.whatsapp;
         });
     },
     data() {
         return {
+            siteName: '',
             name: '',
             phone: 0,
             address: '',
             career: '',
             facebook: '',
-            gmail: '',
+            linkedin: '',
             email: '',
-            imageUrl: ''
+            whatsapp: ''
         }
     },
     methods: {
         submit() {
             axios.patch('/updateadminData', {
+                siteName: this.siteName,
                 name: this.name,
                 phone: this.phone,
                 address: this.address,
@@ -73,7 +88,7 @@ export default {
                 facebook: this.facebook, 
                 gmail: this.gmail, 
                 email: this.email, 
-                imageUrl: this.imageUrl
+                whatsapp: this.whatsapp
                 }).then(res => {
                     console.log(res)
                     if(res.data.done) {

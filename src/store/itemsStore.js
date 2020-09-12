@@ -25,7 +25,8 @@ import axios from 'axios';
     delievered: 0,
     drawer: true,
     drawer2: true,
-    tags: []
+    tags: [],
+    adminData: {}
   };
 
 
@@ -82,12 +83,18 @@ import axios from 'axios';
     },
     getTags(state, data) {
       state.tags = data.tags
+    },
+    putAdminData(state, data) {
+      state.adminData = data;
     }
   };
 
 
 
   const actions = {
+    putAdminData({commit}, adminData) {
+      commit('putAdminData', adminData);
+    },
     loadCats({commit}) {
       axios.get('/fetchCats').then(res => {
         const categories = res.data.cats;
@@ -311,6 +318,9 @@ import axios from 'axios';
     },
     tags() {
       return state.tags;
+    },
+    adminData() {
+      return state.adminData;
     }
   }
 

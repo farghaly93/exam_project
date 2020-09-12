@@ -14,6 +14,10 @@
                 <option v-for="y in years" :key="y" :value="y">{{y}}/{{y+1}}</option>
             </select>
         </div>
+        <div class="number">
+            <label>Select exam number</label>
+            <input @change="filterExams" class="form-control" type="number" v-model="number" min="1"/>
+        </div>
         <app-modal v-if="modal">
             <h3 class="login" slot="header">Write "confirm" to confirm delete</h3>
             <div class="modalBody" slot="body">
@@ -21,48 +25,63 @@
                 <button @click="deleteExam" class="btn btn-primary">Confirm</button>
                 <button @click="modal=false" class="btn btn-primary">close</button>
             </div>
-        </app-modal>
-        <h3 class="center">Exams</h3>
+        </app-modal><br><br>
+        <h3 class="text-center">Exams</h3>
 <!-- Card deck -->
-        <v-row class="mb-6">
-            <v-col v-for="(exam, i) in exams" :key="i" :md="4" :sm="12">
-                <v-card
-                class="mx-auto col-md-3"
-                slot="progress"
-                max-width="400"
-                :loading="loading"
-                >
-                <v-img
-                    class="white--text align-end"
-                    height="200px"
-                    src="https://img2.arabpng.com/20180419/hkw/kisspng-ssc-mts-exam-test-computer-icons-educational-entra-test-paper-5ad919071997b8.5830873915241771591048.jpg"
-                >
-                    <v-card-title>{{exam.year}}</v-card-title>
-                </v-img>
-            
-                <v-card-title>{{exam.stage}}</v-card-title>
-                <v-card-subtitle>{{exam.number}}</v-card-subtitle>
-            
-                <v-card-actions>
-                    <v-btn
-                    color="#3f608e"
-                    text
-                    @click="()=>editExam(exam._id)"
-                    >
-                    explore
-                    </v-btn>
-            
-                    <v-btn
-                    color="#af2828e3"
-                    text
-                    @click="()=>{examId=exam._id;modal=true}"
-                    >
-                    Delete
-                    </v-btn>
-                </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
+        <div class="row">
+            <div v-for="(exams, i) of arranged_exams" :key="i" class="col-md-12 text-center">
+                <button style="width:80%" class="btn btn-primary" type="button" data-toggle="collapse" :data-target="'#collapseExample'+i" aria-expanded="false" aria-controls="collapseExample">
+                    {{i}} النسخ العشوائية لأمتحان رقم
+                </button>
+                <div class="collapse" :id="'collapseExample'+i">
+                    <div class="card card-body">
+                        <div class="row">
+                            <div class="col-md-3" v-for="(exam, e) in exams" :key="e">
+                            <v-card
+                                slot="progress"
+                                max-width="400"
+                                :loading="loading"
+                                style="padding:5px"
+                                >
+                                <v-img
+                                    class="white--text align-end"
+                                    height="200px"
+                                    src="https://img2.arabpng.com/20180419/hkw/kisspng-ssc-mts-exam-test-computer-icons-educational-entra-test-paper-5ad919071997b8.5830873915241771591048.jpg"
+                                >
+                                </v-img>
+                                <v-card-title> 
+                                    العام الدراسي
+                                    <p>{{exam.year}}/{{exam.year+1}}</p>
+                                </v-card-title>
+                                <v-card-title v-if="exam.stage==='one'">الصف الأول الثانوي</v-card-title>
+                                <v-card-title v-if="exam.stage==='two'">الصف الثاني الثانوي</v-card-title>
+                                <v-card-title v-if="exam.stage==='three'">الصف الثالث الثانوي</v-card-title>
+                                <v-card-subtitle style="font-size:22px;font-weight:bold">{{exam.number}} امتحان رقم</v-card-subtitle>
+                            
+                                <v-card-actions>
+                                    <v-btn
+                                    color="#3f608e"
+                                    text
+                                    @click="()=>editExam(exam._id)"
+                                    >
+                                    <v-icon>edit</v-icon>
+                                    </v-btn>
+                            
+                                    <v-btn
+                                    color="#af2828e3"
+                                    text
+                                    @click="()=>{examId=exam._id;modal=true}"
+                                    >
+                                    <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </v-card-actions>
+                                </v-card>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -76,10 +95,10 @@ export default {
     created() {
         this.loading = true;
         this.year = new Date().getFullYear();
-        axios.get('/fetchExams').then(res => {
-            this.exams = res.data.exams;
-            this.loading = false
-        })
+        // axios.get('/fetchExams').then(res => {
+        //     this.exams = res.data.exams;
+        //     this.loading = false
+        // })
         const years = [];
         for(let y = new Date().getFullYear(); y>=2020; y--) {
             years.push(y);
@@ -94,7 +113,9 @@ export default {
             loading: false,
             years: [],
             year: 2020,
-            stage: 'one'
+            stage: 'one',
+            number: null,
+            arranged_exams: {}
         }
     },
     methods: {
@@ -103,7 +124,7 @@ export default {
         },
         filterExams() {  
             this.loading = true;
-            axios.get('/filterExams/'+this.year+'/'+this.stage).then(res => {
+            axios.get('/filterExams/'+this.year+'/'+this.stage+'/'+this.number).then(res => {
                 this.exams = res.data.exams;
                 this.loading = false
             })
@@ -117,6 +138,24 @@ export default {
             } else {
                this.$store.dispatch('writemessage', 'password isn\'t correct...'); 
             }
+        }
+    }, watch: {
+        exams(val) {
+            const arranged = {};
+            let resume = true;
+            let i = 1;
+            while(resume) {
+            const arr = val.filter(v => {
+                return v.number == i
+                })
+            if(arr.length === 0) {
+                resume = false;
+                break;
+                }
+            arranged[i] = arr;
+            i++;
+            }
+            this.arranged_exams = arranged;
         }
     }
 }

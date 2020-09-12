@@ -11,12 +11,13 @@
         shrink-on-scrol
       >
         <v-app-bar-nav-icon @click.stop="toggleDrawer"></v-app-bar-nav-icon>
-        <v-toolbar-title><router-link to="/"><h4 style="color:#fff">Germany-Leader</h4></router-link></v-toolbar-title>
+        <v-toolbar-title><router-link to="/"><h4 style="color:#fff">{{admindata.siteName}}</h4></router-link></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-title class="links">
-          <h5 style="cursor:pointer" to="" v-if="!token" class="link"  @click="openRegisterModal"><strong>Register</strong></h5>
+          <h5 style="cursor:pointer" to="" v-if="!token" class="link"  @click="$router.push('/register/register')"><strong>Register</strong></h5>
           <router-link active-class="active" class="link" v-if="role==='1'" to="/dashboard"><strong>Dashboard</strong></router-link>
-          <router-link active-class="active" class="link" to="/updateUserInfo/upd"><strong style="font-size:16px;">{{username}}</strong></router-link>
+          <router-link active-class="active" class="link" to="/liveVideo"><strong>Live lesson</strong></router-link>
+          <router-link active-class="active" class="link" to="/register/update"><strong style="font-size:16px;">{{username}}</strong></router-link>
           <v-icon class="link" v-if="token" @click="logout">mdi-logout</v-icon>
         </v-toolbar-title>
 
@@ -56,7 +57,10 @@ export default {
    },
    role() {
      return this.$store.getters.role;
-   } 
+   },
+   admindata() {
+     return this.$store.getters.adminData;
+   }
  },
  components: {
    appMessage: messageVue

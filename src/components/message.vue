@@ -3,7 +3,7 @@
         <div class="modal-mask">
             <div class="alert alert-info alert-dismissible">
                 <a @click="closeMessage" href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Message!</strong> <slot name="message"/>
+                <strong>Message!</strong> <p class="text-center" style="color:#fff"><slot name="message"/></p>
             </div>
         </div>
     </transition>

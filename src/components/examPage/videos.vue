@@ -1,0 +1,297 @@
+<template>
+<div class="container" style="margin-top:00px;">
+
+    <button ref="modal_button" style="display:none" type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+
+    <div @click.prevent="" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div style="margin-top:110px;margin-left:auto;margin-right:auto;background-color:#333;width:90%;height:300px;" class="modal-dialog modal-lg">
+          <div style="height: 800px;overflow-y:scroll" class="modal-content">
+            <video style="width:100%;height:100%;" v-if="ready" :src="video.videoPath" controls></video>
+            <div class="explain">
+                <div style="color:#555;font-weight:bolder;font-size:28px;" class="text-center">شرح وملحوظات</div>
+                <div class="exp" v-for="(txt, i) in video.explain?video.explain.split('/'):''" :key="i">
+                  {{txt}}
+                </div>
+            </div>
+            <div style="margin:20px;">
+              <a :active="video.filePath" target="_blank" :href="video.filePath?video.filePath:''" class="btn"><i class="fa fa-download"></i> تنزيل الملفات الملحقة بالدرس</a>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <v-alert
+      color="#1f7b8a"
+      dark
+      dense
+      prominent
+      >
+      <p class="text-center" style="font-size:28px;font-weight:bold">فيديوهات الدروس</p>
+    </v-alert>
+
+    <div style="width:100%" v-for="vid in videos" :key="vid._id" class="movie_card" id="ave">
+    <div class="info_section">
+        <div class="movie_header">
+        <img class="locandina" src="https://i7.pngguru.com/preview/75/67/795/teacher-education-computer-icons-school-lesson-plan-icon-teachers-download.jpg"/>
+        <h1>{{vid.name}}</h1>
+        <h4>{{vid.date | moment("dddd, MMMM Do YYYY")}}</h4>
+        <h3 class="minutes">فيديو رقم  {{vid.number}}</h3>
+        <p class="type">Stage  {{vid.stage}}</p>
+        </div>
+        <div class="movie_desc">
+        <button @click="()=>play(vid)" class="btn btn-primary">تشغيل الفيديو</button>
+        </div>
+        <div class="movie_social">
+        <ul>
+            <li><i class="material-icons">share</i></li>
+            <li><i class="material-icons"></i></li>
+            <li><i class="material-icons">chat_bubble</i></li>
+        </ul>
+        </div>
+    </div>
+    <div class="blur_back ave_back"></div>
+    </div>
+
+    
+
+<!-- <div class="wrapper">
+    <div v-for="vid in videos" :key="vid._id" class="card">
+        <div class="card__overlay"></div>
+        <div class="card__content">
+            <span class="card__title">{{vid.name}}</span>
+            <span class="card__description">السف الدراسي{{vid.stage}}</span>
+            <button class="card__btn">ابدأ الفيديو</button>
+        </div>
+        <span class="card__description">فيديو رقم{{vid.number}}</span>
+    </div>
+</div> -->
+</div>
+
+
+</template>
+
+<script>
+import axios from 'axios'
+export default {
+    mounted() {
+        window.addEventListener('mousedown', () => {
+            this.ready = false;
+        });
+        axios.get('/fetchVideos/'+this.stage).then(res => {
+            this.videos = res.data.videos;
+        });
+    },
+    data() {
+        return {
+            videos: [],
+            video: {},
+            ready: false,
+        }
+    },
+    computed: {
+        stage() {
+            return this.$store.getters.stage;
+        }
+    },
+    methods: {
+        play(vid) {
+            this.$refs.modal_button.click();
+            this.video = vid;
+            this.ready = true;
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800');
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html, body{
+  margin: 0;
+  background: black;
+  font-family: 'Montserrat', helvetica, arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.movie_card{
+  position: relative;
+  display: block;
+  width: 800px;
+  height: 350px;
+  margin: 100px auto; 
+  overflow: hidden;
+  border-radius: 10px;
+  transition: all 0.4s;
+  &:hover{
+    transform: scale(1.02);
+    transition: all 0.4s;
+  }
+  .info_section{
+    position: relative;
+    width: 100%;
+    height: 100%;
+      background-blend-mode: multiply;
+    z-index: 2;
+    border-radius: 10px;
+    .movie_header{
+      position: relative;
+      padding: 25px;
+      height: 40%;
+      h1{
+        color: #fff;
+        font-weight: 400;
+      }
+      h4{
+        color: #9ac7fa;
+        font-weight: 400;
+      }
+      .minutes{
+        display: inline-block;
+        margin-top: 10px;
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid rgba(255,255,255,0.13);
+      }
+      .type{
+        display: inline-block;
+        color: #cee4fd;
+        margin-left: 10px;
+      }
+      .locandina{
+        position: relative;
+        float: left;
+        margin-right: 20px;
+        height: 120px;
+        box-shadow: 0 0 20px -10px rgba(0,0,0,0.5);
+      }
+    }
+    .movie_desc{
+      padding: 25px;
+      height: 50%;
+      .text{
+        color: #cfd6e1;
+      }
+    }
+    .movie_social{
+      height: 10%;
+      padding-left: 15px;
+      padding-bottom: 20px;
+      ul{
+        list-style: none;
+        padding: 0;
+        li{
+          display: inline-block;
+          color: rgba(255,255,255,0.4);
+          transition: color 0.3s;
+          transition-delay: 0.15s;
+          margin: 0 10px;
+          &:hover{
+            transition: color 0.3s;
+            color: rgba(255,255,255,0.8);
+          }
+          i{
+            font-size: 19px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  .blur_back{
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    height: 100%; right: 0;
+    background-size: cover;
+    border-radius: 11px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .movie_header{
+    width: 60%;
+  }
+  
+  .movie_desc{
+    width: 50%;
+  }
+  
+  .info_section{
+    background: linear-gradient(to right, #0d0d0c 50%, transparent 100%);
+  }
+  
+  .blur_back{
+    width: 80%;
+    background-position: -100% 10% !important;  
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .movie_card{
+    width: 95%;
+    margin: 70px auto; 
+    min-height: 350px;
+    height: auto;
+  }
+  
+  .blur_back{
+    width: 100%;
+    background-position: 50% 50% !important;  
+  }
+  
+  .movie_header{
+    width: 100%;
+    margin-top: 85px;
+  }
+  
+  .movie_desc{
+    width: 100%;
+  }
+  
+  .info_section{
+    background: linear-gradient(to top, rgb(20, 20, 19) 50%, transparent 100%);
+    display: inline-grid;
+  }
+}
+
+#ave{
+  box-shadow: 0px 0px 150px -45px rgba(199,147,75, 0.7);
+  margin-bottom: 200px;
+  &:hover{
+    box-shadow: 0px 0px 120px -55px rgba(199,147,75, 0.7);
+  }
+}
+
+.ave_back{
+    background: url("../../assets/images/germany.jpg");
+}
+
+ /* Style buttons */
+.btn {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
+}
+.explain {
+  padding: 20px;
+  .exp {
+    margin: 10px;
+  }
+}
+</style>

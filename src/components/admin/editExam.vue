@@ -1,19 +1,21 @@
 <template>
 <form class="section" ref="form">
     <div style="display:flex;flex-direction:column;justify-content:start">
-      <label><strong>Question address</strong></label>
-      <input calss="form-control" v-model="fetchedQuestions.type" type="text" placeholder="Question address"/>
+      <label><strong>عنوان السؤال</strong></label>
+      <textarea class="form-control" v-model="fetchedQuestions.type" placeholder="Question address"></textarea>
+      <img v-if="fetchedQuestions.type.split('data').length>1" :src="fetchedQuestions.type"/>
+      <input type="file" @change="(e)=>uploadPhoto(e, 'address')"/>
     </div>
     <div class="row">
       <div class="col-md-6">
-        <label><strong>Number of questions</strong></label>
+        <label><strong>عدد الاسئلة</strong></label>
         <input class="form-control" v-model.number="numberOfQuestions" type="number" min="1" max="40"/>
       </div>
       <div class="col-md-6">
-        <label><strong>Type</strong></label>
+        <label><strong>نوع السؤال</strong></label>
         <select class="form-control" v-model="type">
-          <option :value="0">typing</option>
-          <option :value="1">mcq</option>
+          <option :value="0">مقالي</option>
+          <option :value="1">اختياري</option>
         </select>
       </div>
     </div>
@@ -21,17 +23,20 @@
       <div v-for="q in numberOfQuestions" :key="q" class="question">
         <div class="row">
           <div class="col-md-8">
-            <label><strong>Question</strong></label>
-            <input class="form-control" v-model="fetchedQuestions.questions[q-1]['question']" type="text" :placeholder="'question'"/>
+            <label><strong>السؤال</strong></label>
+            <textarea class="form-control" v-model="fetchedQuestions.questions[q-1]['question']" placeholder="Question"></textarea>
+            <img v-if="fetchedQuestions.questions[q-1]['question'].split('data').length>1" :src="fetchedQuestions.questions[q-1]['question']"/>
+            <input type="file" @change="(e)=>uploadPhoto(e, q-1)"/>
           </div>
-          <div class="col-md-1">
-            <label><strong>Degree</strong></label>
-            <input class="form-control" v-model.number="fetchedQuestions.questions[q-1]['fullDegree']" type="number" :placeholder="'full degree'"/>
+          <div class="col-md-2"></div>
+          <div class="col-md-2">
+            <label><strong>الدرجة النهائية</strong></label>
+            <input style="width:80%" class="form-control" v-model.number="fetchedQuestions.questions[q-1]['fullDegree']" type="number" :placeholder="'full degree'"/>
           </div>
         </div>
         <div v-if="type===1">
           <div>
-            <label><strong>Number of choices</strong></label>
+            <label><strong>عدد الاختيارات</strong></label>
             <input class="form-control" v-model.number="questionsNumberOfChoices[q-1]" type="number" min="2" max="6" value="2"/> 
           </div>
           <div class="row">
@@ -78,6 +83,20 @@ export default {
     methods: {
       doSubmit() {
         this.$emit('concatArraysOfQuestions', this.fetchedQuestions);
+      },
+      uploadPhoto(e, field) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        let image;
+        reader.onload = () => {
+            image = reader.result;
+            if(field === 'address') {
+              this.fetchedQuestions.type = image.toString('base64');
+            } else {
+              this.fetchedQuestions.questions[field]['question'] = image.toString('base64');
+            }
+        }
       }
     }
   }

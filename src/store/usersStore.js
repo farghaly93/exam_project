@@ -41,7 +41,8 @@ import router from '../router';
       state.authLoading = true;
       axios.post('/signin', body).then(res => {
         state.authLoading = false;
-        if(res.data.done) {
+        console.log(res.data.confirmed);
+        if(res.data.done && res.data.confirmed===1) {
             state.message = 'signed in successfully';
             rootState.itemsStore.showModal = false;
             state.token = res.data.token;
@@ -60,10 +61,15 @@ import router from '../router';
             localStorage.setItem('username', res.data.username);
             state.expDate = expDate;
             dispatch('autoSignin');
-            if(state.role===1) router.push('/dashboard');
-            if(state.role===0) alert('/exam');
+            if(state.role==1) router.replace('/dashboard');
+            if(state.role==0) router.replace('/exam');
+        } else if(res.data.done && res.data.confirmed===0) {
+          state.message = 'بانتظار تأكيد الطالب';
+          //rootState.itemsStore.showModal = false;
+          router.replace('/');
         } else {
             state.message = res.data.message;
+            //router.replace('/');
         }
       })
     },
@@ -73,24 +79,9 @@ import router from '../router';
         axios.post('/signup', body).then( res => {
             state.authLoading = false;
             if(res.data.done) {
-                state.message = 'signed up successfully';
+                state.message = 'بانتظار تأكيد الطالب';
                 rootState.itemsStore.showModal = false;
-                state.token = res.data.token;
-                state.userEmail = res.data.email;
-                state.role = res.data.role;
-                state.userId = res.data.userId;
-                state.stage = res.data.stage;
-                state.username = res.data.username;
-                localStorage.setItem('token', res.data.token);
-                const expDate = new Date(new Date().getTime()+6000000);
-                localStorage.setItem('expDate', expDate);
-                localStorage.setItem('userEmail', res.data.email);
-                localStorage.setItem('role', res.data.role);
-                localStorage.setItem('userId', res.data.userId);
-                localStorage.setItem('stage', res.data.stage);
-                localStorage.setItem('username', res.data.username);
-                state.expDate = expDate;
-                dispatch('autoSignin');
+                router.replace('/');
             }else {
                 state.message = res.data.message;
             }
@@ -142,7 +133,7 @@ import router from '../router';
         localStorage.removeItem('stage');
         localStorage.removeItem('username');
         state.role = null;
-        rootState.itemsStore.showModal = true;
+        //rootState.itemsStore.showModal = true;
         router.replace('/');
     }
   };
@@ -167,6 +158,12 @@ import router from '../router';
     },
     userId(state) {
         return state.userId;
+    },
+    username(state) {
+        return state.username;
+    },
+    stage(state) {
+        return state.stage;
     },
    }
 

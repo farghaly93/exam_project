@@ -1,40 +1,56 @@
 
 <template>
     <div>
-        <div class="row">
-            <div class="col-md-3">
-                <label>السنة الدراسية</label>
-                <div class="row">
-                    <input class="form-control col-md-6" min="2020" type="number" v-model.number="year" />
-                    <p class="col-md-6">/{{year+1}}</p> 
+        <input @change="pickImage" type="file"/>
+        <img ref="image"/>
+        <div style="margin:30px;" class="row text-center">
+            <div class="col-md-2.4">
+                <div class="examinfo">
+                    <label>السنة الدراسية</label>
+                    <div class="row">
+                        <input class="form-control col-md-6" min="2020" type="number" v-model.number="year" />
+                        <p class="col-md-6">/{{year+1}}</p> 
+                    </div>
                 </div>
             </div>
-            <div class="stage col-md-3">
-                <label>Select stage</label>
-                <select class="form-control" v-model="stage">
-                    <option value="one">One</option>
-                    <option value="two">Two</option>
-                    <option value="three">Three</option>
-                </select>
+            <div class="col-md-2.4">
+                <div class="examinfo">
+                    <label>المرجلة الدراسية</label>
+                    <select class="form-control" v-model="stage">
+                        <option value="one">الصف الأول</option>
+                        <option value="two">الصف الثاني</option>
+                        <option value="three">الصف الثالث</option>
+                    </select>
+                </div>
             </div>
-            <div class="number col-md-3">
-                <label>Exam number</label>
-                <input class="form-control" type="number" v-model.number="number" />
+            <div class="col-md-2.4">
+                <div class="examinfo">
+                    <label>رقم الامتحان</label>
+                    <input class="form-control" type="number" v-model.number="number" />
+                </div>
             </div>
-            <div class="col-md-3">
-                <label>Number of Questions sections</label>
-                <input class="form-control" type="number" min="1" max="10" v-model.number="numberOfQuestionsSections"/>
+            <div class="nos col-md-2.4">
+                <div class="examinfo">
+                    <label>عدد الاسئلة الرئيسية</label>
+                    <input class="form-control" type="number" min="1" max="10" v-model.number="numberOfQuestionsSections"/>
+                </div>
+            </div>
+            <div class="nos col-md-2.4">
+                <div class="examinfo">
+                    <label>مدة الأمتحان</label>
+                    <input class="form-control" type="number" min="1" v-model.number="timer"/>
+                </div>
             </div>
         </div>
         <div v-if="edit" class="questionsSection">
-            <h2>Edit exam1</h2>
+            <h2>تعديل الامتحان</h2>
             <edit-exam :section="sections[section-1]" @concatArraysOfQuestions="concatArraysOfQuestionsHandler" v-for="section in numberOfQuestionsSections" :key="section"/>
         </div>
         <div v-if="!edit" class="questionsSection">
             <questions-section @concatArraysOfQuestions="concatArraysOfQuestionsHandler" v-for="quesSec in numberOfQuestionsSections" :key="quesSec"/>
         </div>
         <Loading v-if="loading"/>
-        <button style="padding:12px 70px;" class="btn btn-primary" @click="addExam">Add exam</button>
+        <button style="padding:12px 70px;" class="btn btn-primary text-center" @click="addExam">اضافة الامتحان</button>
     </div>
 </template>
 
@@ -56,6 +72,8 @@ export default {
 
                 this.stage = res.data.exam.stage;
                 this.number = res.data.exam.number;
+                this.year = res.data.exam.year;
+                this.timer = res.data.exam.timer;
             });
         }
     },
@@ -74,7 +92,8 @@ export default {
             _id: '',
             number: 1,
             loading: false,
-            year: 2020
+            year: 2020,
+            timer: 0
         }
     },
     watch: {
@@ -102,7 +121,7 @@ export default {
             this.loading = true;
             eventBus.$emit('collectQuestions');
             //console.log(this.allQuestions);
-            const exam = {year: this.year, stage: this.stage, number: this.number, sections: this.allQuestions};
+            const exam = {year: this.year, stage: this.stage, number: this.number, sections: this.allQuestions, timer: this.timer};
             if(this.edit) { 
                 axios.post('/editExam/'+this._id, exam).then(res => {
                     this.$store.dispatch('writemessage', 'Exam uploaded succefully');
@@ -118,11 +137,25 @@ export default {
                 this.$store.dispatch('writemessage', 'Exam uploaded succefully');
                 console.log(res.data.done);
             })
+        },
+        pickImage(event) {
+            const file = event.target.files[0];
+            console.log(URL.createObjectURL(file));
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                this.$refs.image.src = reader.result;
+            }
         }
     }
 }
 </script>
 
 <style lang="scss">
-    
+    .examinfo {
+        text-align: center;
+        input {
+            width: 80%;
+        }
+    }
 </style>

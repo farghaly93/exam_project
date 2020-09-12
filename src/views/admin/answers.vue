@@ -6,12 +6,13 @@
                     <input @input="search" type="text" placeholder="search" />
                     <i class="fa fa-search"></i>
                 </div>
-                <v-select
-                    style="color:#fff"
-                    v-model="stage"
-                    :items="['one', 'two', 'three']"
-                />
-                <ul>
+                <select class="form-control" style="display:block" v-model="stage">
+                    <option selected value="one">الصف الأول الثانوي</option>
+                    <option value="two">الصف الثاني الثانوي</option>
+                    <option value="three">الصف الثالث الثانوي</option>
+                </select>
+                <div class="text-center" style="margin-top:30px;color:#fff;font-weight:bolder;" v-if="filteredUsers.length===0"><p v-if="stage===''"></p><p></p></div>
+                <ul style="height:700px;overflow-y:scroll;">
                     <li @click="() => {getExams(user._id, user.fullname)}" :key="i" v-for="(user, i) in filteredUsers" class="clearfix">
                         <div :class="lastExamStudents.includes(user._id)?'about':'absent'">
                             <div class="name">{{user.fullname.split('@')[0]}}</div>
@@ -26,31 +27,33 @@
                     <v-system-bar/>
                     <div style="text-align:center;margin-bottom:30px;color:#6b364a;font-weight:bold">
                         <h3 style="color:#555;font-weight:bold;">{{username}}</h3>
-                        <h3>Exam {{exam.solution.number}}</h3>
-                        <h4><strong>Stage </strong>{{exam.solution.stage}} </h4>
-                        <h4><strong>Education year </strong>{{exam.solution.year}}/{{exam.solution.year+1}}</h4>
+                        <h3>({{exam.number}}) أمتحان رقم</h3>
+                        <h4 v-if="exam.stage==='one'">الصف الأول الثانوي</h4>
+                        <h4 v-if="exam.stage==='two'">الصف الثاني الثانوي</h4>
+                        <h4 v-if="exam.stage==='three'">الصف الثالث الثانوي</h4>
+                        <h4><strong></strong>({{exam.year}}/{{exam.year+1}}) العام الدراسي</h4>
                         <h2 style="color:red">{{mark}} / {{fullMark}}</h2>
                     </div>
-                    <div v-for="(section, s) in exam.solution.sections" :key="s" class="section">
+                    <div v-for="(section, s) in exam.sections" :key="s" class="section">
                         <h4 style="margin:20px;text-decoration:underline;color:#555">{{section.type}}</h4>
                         <div style="margin-left: 40px;" v-for="(question, q) in section.questions" :key="q"  class="question">
-                            <strong>{{q}}-</strong><h4>{{question.question}}?</h4>
-                            <div style="display:flex;flex-direction:row;justify-content: space-between">
-                                <h5 style="font-weight:bold;color:#2f6b3f;margin-left:20px;">{{question.answer}}</h5>
-                                <div class="degree">
-                                    <integer-plusminus @change="calculateMark()" v-model="question.degree" :min="0" :max="question.fullDegree" :value="0" :increment-aria-label="'increase by 1'" :decrement-aria-label="'decrease by 1'" :spin-button-aria-label="'example two'"></integer-plusminus>
-
-                                    <p>___</p>
-                                    <p>{{question.fullDegree}}</p>
-                                </div>
+                            <div class="left">
+                                <div class="ques">{{q+1}}-{{question.question}}?</div>
+                                <div class="answer"><strong style="color:#7fb68e;font-size:16px;">Answer: </strong>{{question.answer}}</div>
+                                <input style="color:#da4545;font-weight:bold" type="text" v-model="question.correction" placeholder="correction"/>
                             </div>
-                            <input style="color:#da4545;font-weight:bold" type="text" v-model="question.correction" placeholder="correction"/>                     
+                            <div class="degree">
+                                <integer-plusminus @change="calculateMark()" v-model="question.degree" :min="0" :max="question.fullDegree" :value="0" :increment-aria-label="'increase by 1'" :decrement-aria-label="'decrease by 1'" :spin-button-aria-label="'example two'"></integer-plusminus>
+                                <p>/</p>
+                                <p>{{question.fullDegree}}</p>
+                            </div>
                         </div>
                     </div>
                     <button @click="submitCorrection" type="button" class="btn btn-primary">Submit correction</button>
                     <v-divider/>
                 </section>
                 <section class="studentExams" v-if="!isStudentExam">
+                    <div style="color:#555;font-size:22px;font-weight:bold;" class="text-center">{{username}}</div>
                      <div
                         class="exam"
                         :class="exam.done?'done':'toCorrect'" 
@@ -58,7 +61,7 @@
                         v-for="(exam, i) in exams" 
                         :key="i"
                         >
-                        <p>Exam number ({{exam.solution.number}})</p>
+                        <p>({{exam.number}}) اجابة امتحان رقم </p>
                     </div>
                 </section>
             </div>
@@ -103,7 +106,7 @@ export default {
         },
         fullMark() {
             let mark = 0;
-            this.exam.solution.sections.forEach(sec => {
+            this.exam.sections.forEach(sec => {
                 sec.questions.forEach(ques => {
                     mark = mark + ques.fullDegree; 
                 })
@@ -112,7 +115,7 @@ export default {
         },
         mark() {
             let mark = 0;
-            this.exam.solution.sections.forEach(sec => {
+            this.exam.sections.forEach(sec => {
                 sec.questions.forEach(ques => {
                     mark = mark + +ques.degree; 
                 })
@@ -144,7 +147,7 @@ export default {
         },
         calculateMark() {
             let mark = 0;
-            this.exam.solution.sections.forEach(sec => {
+            this.exam.sections.forEach(sec => {
                 sec.questions.forEach(ques => {
                     mark = mark + +ques.degree; 
                 })
@@ -223,6 +226,44 @@ export default {
         }
     }
     .examToCorrect {
+        .section {
+            .question {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 15px;
+                border-bottom: 1px  #555 solid; 
+                .left {
+                    flex: 7;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: top;
+                    align-items: left;
+                    .ques {
+                        font-size: 22px;
+                        color: rgb(85, 85, 85);
+                    }
+                    .answer {
+                        font-size: 20px;
+                        font-weight: bold;
+                        color: #60709f;
+                    }
+                    .correction {
+                        font-size: 20px;
+                        color: rgb(104, 41, 41);
+                    }
+                }
+                .degree {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-weight: bold;
+                }
+            }
+        }
         .degree {
             color:red;
             font-size: 22px;

@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <app-message v-if="message">
+        <h3 slot="message">{{message}}</h3>
+    </app-message>
     <app-register v-if="showModal" />
     <v-app  id="inspire">
       <router-view name="header"/>
@@ -14,13 +17,17 @@
 <script>
   import axios from 'axios'
   import AppRegister from './components/register.vue'
+  import messageVue from './components/message.vue'
 
   export default {
    created() {
       this.$store.dispatch('autoSignin');
       axios.get('/addVisitor').then(res => {
       });
-      
+      axios.get('/getAdminData').then(res => {
+          this.$store.dispatch('putAdminData', res.data.adminData);
+          //document.getElementsByClassName('main')[0].style.backgroundImage = `url(${this.adminData.imageUrl})`;
+      })
     },
     data() {
       return {
@@ -30,11 +37,15 @@
     computed: {
       showModal() {
         return this.$store.getters.showModal;
-   },
+      },
+      message() {
+        return this.$store.getters.message;
+      }
     },
     name: 'app',
     components: {
-      AppRegister
+      AppRegister,
+      appMessage: messageVue
     },
     watch: {
       showModal(val) {

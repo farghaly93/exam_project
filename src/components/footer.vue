@@ -1,9 +1,10 @@
 <template>
+<div class="page-footer">
  <v-footer
       app
       dark
       padless
-      absolute
+      fixed
     >
       <v-card
         flat
@@ -26,16 +27,17 @@
         <v-divider></v-divider>
   
         <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+          {{ new Date().getFullYear() }} — <strong>Farghaly-developes</strong>
         </v-card-text>
       </v-card>
     </v-footer>
+</div>
 </template>
 
 <style lang="scss" scoped>
 	.page-footer {
     z-index: 1;
-    margin-top: 1000px;
+    margin-top: 170px;
     background-color: #ccc;
 	}
 </style>

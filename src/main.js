@@ -6,15 +6,18 @@ import store from './store'
 import Vuelidate from 'vuelidate'
 import axios from 'axios'
 import VueHtmlToPaper from 'vue-html-to-paper'
-import "../node_modules/bootstrap/dist/css/bootstrap.css"
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import "../node_modules/bootstrap/dist/js/bootstrap.js"
-import "../node_modules/popper.js/dist/popper.min.js"
-import "../node_modules/jquery/dist/jquery.min.js"
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import vuetify from './plugins/vuetify';
-const url = 'https://germany-exam.herokuapp.com';
-const url2 = 'http://localhost:3001'
+import VueRecord from '@codekraft-studio/vue-record'
+import VueMoment from 'vue-moment'
+
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import "../node_modules/bootstrap/dist/css/bootstrap.css"
+import "../node_modules/jquery/dist/jquery.min.js"
+import "../node_modules/popper.js/dist/popper.min.js"
+import "../node_modules/bootstrap/dist/js/bootstrap.js"
+
+const url1 = 'https://deutsch-lehrer.herokuapp.com';
+const url2 = 'http://localhost:5000'
 
 const options = {
   name: '_blank',
@@ -24,15 +27,13 @@ const options = {
     'scrollbars=yes'
   ],
   styles: [
-    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
-    'https://unpkg.com/kidlat-css/css/kidlat.css'
   ]
 }
-Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
 Vue.use(VueHtmlToPaper, options);
 Vue.use(Vuelidate);
-axios.defaults.baseURL = url;
+Vue.use(VueRecord);
+Vue.use(VueMoment);
+axios.defaults.baseURL = url1;
 axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
 Vue.config.productionTip = false
 
@@ -43,4 +44,5 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+// export const url = url2;
 export const eventBus = new Vue();

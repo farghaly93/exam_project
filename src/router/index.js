@@ -8,30 +8,35 @@ import Redirector from '../views/redirector.vue'
 import Header from '../components/header/header.vue'
 import Footer from '../components/footer.vue'
 import AddExam from '../views/admin/addExam.vue'
-import Register from '../components/register.vue'
+import Register from '../components/userform.vue'
 import Users from '../views/admin/users.vue'
 import Exams from '../views/admin/exams.vue'
 import AdminData from '../views/admin/adminData.vue'
 import Answers from '../views/admin/answers.vue'
+import LiveVideo from '../views/broadcasting.vue'
+import UploadVideo from '../views/admin/upload_video.vue'
+import AdminVideos from '../views/admin/videos.vue'
+import Videos from '../components/examPage/videos.vue'
+import Students_grades from '../views/admin/students_grades.vue'
 import NextExamInstructions from '../views/admin/nextExamInstructions.vue'
 import store from '../store/index'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', component: Categories  },
-  { path: '/exam', components: {default: Exam, 'header': Header, 'footer': Footer}
-  , beforeEnter: (to, from, next) => {
+  { path: '/',  components: {default: Categories, }  },
+  { path: '/exam', components: {default: Exam, 'header': Header, 'footer': Footer}, beforeEnter: (to, from, next) => {
     if(localStorage.getItem('token')) {
       if(localStorage.getItem('role') == 1) {
         next('/dashboard');
     }
       next();
     } else {
-        store.state.itemsStore.showModal = true
-        next('/');
+        next('/register/register');
     }
-  } },
-  { path: '/register', components: {default: Register, 'header': Header, 'footer': Footer}},
+  }},
+  { path: '/liveVideo', components: {default: LiveVideo, 'header': Header, 'footer': Footer} },
+  { path: '/register/:way', components: {default: Register, 'header': Header, 'footer': Footer}},
+  { path: '/videos', components: {default: Videos, 'header': Header, 'footer': Footer}},
   { path: '/updateUserInfo/:update', components: {default: Register, 'header': Header, 'footer': Footer}},
   //{ path: '/redirector/:path', component: Redirector },
   
@@ -64,6 +69,20 @@ const routes = [
   },{
     path: 'adminData',
     component: AdminData
+  },{
+    path: 'uploadVideo',
+    component: UploadVideo,
+    props: true
+  },{
+    path: 'uploadVideo/:id',
+    component: UploadVideo,
+    props: true
+  },{
+    path: 'videos',
+    component: AdminVideos
+  },{
+    path: 'students_grades',
+    component: Students_grades
   }]
   , beforeEnter: (to, from, next) => {
     if(localStorage.getItem('role') == 1) {

@@ -6,18 +6,8 @@
           </div>
       </div>
       <v-container :fluid="true" class="grey lighten-5">
-      <v-row
-        class='mb-6'
-        no-gutters
-      >
-        <v-col
-          v-for="item in items"
-          :key="item.title"
-          :md="4"
-          :sm="12"
-          style="padding: 5px;"
-        >
-          
+      <div class="row">
+        <div class="col-md-4"  v-for="(item, i) in items" :key="i" style="padding: 5px;">
             <v-card
               :color="item.color"
               dark
@@ -43,8 +33,8 @@
             </v-card>
 
 
-        </v-col>
-      </v-row>
+        </div>
+      </div>
     </v-container>
   </body>
 </template>
