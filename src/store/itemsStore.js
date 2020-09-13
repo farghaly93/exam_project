@@ -92,6 +92,9 @@ import axios from 'axios';
 
 
   const actions = {
+    toggleDrawer() {
+      state.drawer = !state.drawer;
+    },
     putAdminData({commit}, adminData) {
       commit('putAdminData', adminData);
     },

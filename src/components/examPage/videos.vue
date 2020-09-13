@@ -3,8 +3,8 @@
 
     <button ref="modal_button" style="display:none" type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
 
-    <div @click.prevent="" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-      <div style="margin-top:110px;margin-left:auto;margin-right:auto;background-color:#333;width:90%;height:300px;" class="modal-dialog modal-lg">
+    <div id="modal" @click.prevent="" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div style="margin-top:110px;margin-left:auto;margin-right:auto;background-color:#333;width:90%;height:100%;" class="modal-dialog modal-lg">
           <div style="height: 800px;overflow-y:scroll" class="modal-content">
             <video style="width:100%;height:100%;" v-if="ready" :src="video.videoPath" controls></video>
             <div class="explain">
@@ -13,8 +13,8 @@
                   {{txt}}
                 </div>
             </div>
-            <div style="margin:20px;">
-              <a :active="video.filePath" target="_blank" :href="video.filePath?video.filePath:''" class="btn"><i class="fa fa-download"></i> تنزيل الملفات الملحقة بالدرس</a>
+            <div class="text-center" style="margin:20px;">
+              <a target="_blank" :href="video.filePath?video.filePath:''" class="btn"><i class="fa fa-download"></i> تنزيل الملفات الملحقة بالدرس</a>
             </div>
           </div>
       </div>
@@ -34,9 +34,11 @@
         <div class="movie_header">
         <img class="locandina" src="https://i7.pngguru.com/preview/75/67/795/teacher-education-computer-icons-school-lesson-plan-icon-teachers-download.jpg"/>
         <h1>{{vid.name}}</h1>
-        <h4>{{vid.date | moment("dddd, MMMM Do YYYY")}}</h4>
+        <p style="color:#999">{{vid.date | moment("dddd, MMMM Do YYYY")}}</p>
         <h3 class="minutes">فيديو رقم  {{vid.number}}</h3>
-        <p class="type">Stage  {{vid.stage}}</p>
+        <p class="type" v-if="vid.stage==='one'">الصف الأول الثانوي</p>
+        <p class="type" v-if="vid.stage==='two'">الصف الثاني الثانوي</p>
+        <p class="type" v-if="vid.stage==='three'">الصف الثالث الثانوي</p>
         </div>
         <div class="movie_desc">
         <button @click="()=>play(vid)" class="btn btn-primary">تشغيل الفيديو</button>
@@ -91,6 +93,9 @@ export default {
     computed: {
         stage() {
             return this.$store.getters.stage;
+        },
+        modal() {
+          return document.getElementById('modal');
         }
     },
     methods: {
@@ -98,7 +103,12 @@ export default {
             this.$refs.modal_button.click();
             this.video = vid;
             this.ready = true;
-        }
+        },
+    },
+    watch: {
+      modal: (val) => {
+        console.log(val);
+      }
     }
 }
 </script>

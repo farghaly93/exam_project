@@ -114,7 +114,6 @@ export default {
         { title: 'Next exam instructions', icon: 'mdi-format-align-justify', link: '/dashboard/nextExamInstructions' },
         { title: 'Exams', icon: 'mdi-format-align-justify', link: '/dashboard/exams' },
         { title: 'Answers', icon: 'mdi-format-align-justify', link: '/dashboard/answers' },
-        { title: 'Answers', icon: 'mdi-format-align-justify', link: '/dashboard/answers' },
         { title: 'ترتيب الطلبة', icon: 'mdi-format-align-justify', link: '/dashboard/students_grades' },
         { title: 'Live video', icon: 'mdi-format-align-justify', link: '/liveVideo' },
         { title: 'Upload video', icon: 'mdi-format-align-justify', link: '/dashboard/uploadVideo' },

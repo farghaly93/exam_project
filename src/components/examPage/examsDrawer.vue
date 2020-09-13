@@ -6,8 +6,8 @@
       
     >
 	<nav class="examsNav" id="sidebar">
-	  		<h1><a href="#" class="logo">الأمتحانات</a></h1>
         <ul class="list-unstyled components mb-5">
+          <v-divider/> 
           <li class="">
             <router-link :class="online?'live':'offline'" to="/liveVideo">الدرس الاون لاين<strong style="color:red;margin-left:46px;" v-if="online">Live</strong></router-link>
           </li>
@@ -15,14 +15,28 @@
             <a @click="lessonsHandler" href="#"><span class="fa fa-home mr-3"></span> الدروس</a>
           </li>
           <li class="active">
-            <a @click="currentExamHandler" href="#"><span class="fa fa-home mr-3"></span> {{examDone?'تعليمات الامتحان القادم': 'قم بحل الامتحان الحالي'}}</a>
+            <a @click="getInstructions" href="#"><span class="fa fa-home mr-3"></span> {{'تعليمات الامتحان القادم'}}</a>
           </li>
+          <v-divider/>
+          <v-divider/> 
+	  		  <h1><a href="#" class="logo">الأمتحانات</a></h1>
+          <li v-if="unSolvedExamsNumbers.length===0" class="active">
+            <a href="#"><span class="fa fa-edit mr-3"></span>في انتظار الامتحان القادم</a>
+          </li>
+          <li v-for="exam in unSolvedExamsNumbers" :key="exam" class="active">
+            <a @click="()=>currentExamHandler(exam)" href="#"><span class="fa fa-home mr-3"></span> أمتحان رقم {{exam}}</a>
+          </li>
+          <v-divider/>
+          <v-divider/>
+          <br>
+          <h1><a href="#" class="logo"> الامتحانات السابقة</a></h1>
           <li 
             :class="[exam.number===currentExamNumber?'current':'']"
              @click="() => {getExamResult(exam)}" v-for="exam in exams" :key="exam._id"  
           >
-              <a href="#"><span :class="[exam.done?'fa fa-edit': 'fa fa-user']" class="mr-3"></span> {{currentExam}}({{exam.number}})</a>
+              <a href="#"><span :class="[exam.done?'fa fa-edit': 'fa fa-user']" class="mr-3"></span> {{'نتيجة أمتحان رقم'}} ({{exam.number}})</a>
           </li>
+          <v-divider/> 
         </ul>
 
     </nav>
@@ -33,20 +47,13 @@
 <script>
 import $ from 'jquery'
 import io from 'socket.io-client'
+import axios from 'axios'
 export default {
     mounted() {
-      // const online = setInterval(() => {
-      //   this.online = !this.online;
-      //   console.log(this.online);
-      //   if(!this.live) {
-      //     clearInterval(online);
-      //     this.online = false;
-      //   }
-      // }, 1000);
+      this.refreshExamsList();
       this.socket.on('live on', stage => {
         var stagee = stage=='1'?'one':stage=='2'?'two':'three';
           if(stagee==this.$store.getters.stage) {
-            console.log('ooooo')
             this.online = !this.online;
           }
       })
@@ -57,24 +64,25 @@ export default {
           })
         },
     created() {
-        console.log(this.examDone)
     },
     props: [
         'currentExamHandler',
-        'examDone', 
         'exams', 
         'currentExamNumber', 
         'getExamResult', 
         'currentExam', 
         'drawer',
-        'lessonsHandler'
+        'lessonsHandler',
+        'getInstructions',
+        'refreshExamsList',
+        'unSolvedExamsNumbers'
         ],
         data() {
           return {
             socket: io('deutsch-lehrer.herokuapp.com'),
             // socket: io('localhost:5000'),
             live: false,
-            online: false
+            online: false,
           }
         }
 }
@@ -143,8 +151,8 @@ export default {
       border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
       #sidebar ul li a:hover {
         color: #fff;
-        background: #2f89fc;
-        border-bottom: 1px solid #2f89fc; 
+        background: #767a80;
+        border-bottom: 1px solid #7b8088; 
         text-decoration:none;}
     #sidebar ul li.active > a {
       background: transparent;
@@ -154,14 +162,16 @@ export default {
       }
       #sidebar .current > a {
         color: #fff;
-        background: #2f89fc;
-        border-bottom: 1px solid #2f89fc; 
+        background: #7c8591;
+        border-bottom: 2px solid #40454b; 
         text-decoration:none;
       }
-      
+      #sidebar .current > a:hover {
+        background: #7c8591;
+      }
       #sidebar ul li.active > a:hover {
-        background: #2f89fc;
-        border-bottom: 1px solid #2f89fc; }
+        background: #525a64;
+        border-bottom: 1px solid #7d8288; }
   #sidebar .custom-menu {
     display: inline-block;
     position: absolute;
