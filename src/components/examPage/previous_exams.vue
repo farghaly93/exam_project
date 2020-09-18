@@ -13,10 +13,12 @@
         </div>
 
         <div v-for="(section, s) in examResult.sections" :key="s" class="section">
-            <h4 class="sectionType">{{section.type}}:</h4>
+            <h4 v-if="section.type.split('data').length==1" class="sectionType">{{section.type}}:</h4>
+            <img v-if="section.type.split('data').length>1" :src="section.type"/>
             <div v-for="(question, q) in section.questions" :key="q" class="questions" :class="section.questions[q].correction?'wrong':''">
                 <div class="examResultsQuestionAndDegree">
-                    <strong>{{q+1}}-</strong><h5> {{question.question}}?</h5>
+                    <div v-if="question.question.split('data').length==1"><strong>{{q+1}}-</strong><h5> {{question.question}}?</h5></div>
+                    <strong>{{q+1}}-</strong><img v-if="question.question.split('data').length>1" :src="question.question"/>
                     <!--  -->
                     <div style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
                         <i v-if="examResult.done" :style="[question.degree < question.fullDegree?{'color':'red'}:{'color':'green'}]" style="font-size:25px;" :class="question.degree < question.fullDegree?'fa fa-times times': 'fa fa-check check'" aria-hidden="true"></i>

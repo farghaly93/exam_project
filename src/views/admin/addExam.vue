@@ -1,8 +1,6 @@
 
 <template>
     <div>
-        <input @change="pickImage" type="file"/>
-        <img ref="image"/>
         <div style="margin:30px;" class="row text-center">
             <div class="col-md-2.4">
                 <div class="examinfo">
@@ -159,3 +157,6 @@ export default {
         }
     }
 </style>
+
+
+

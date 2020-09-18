@@ -33,7 +33,7 @@
               row-height="25"
               shaped
             ></v-textarea>
-            <img v-if="questions.questions[q-1]['question'].split('data').length===1" :src="questions.questions[q-1]['question']"/>
+            <img v-if="questions.questions[q-1]['question'].split('data').length>1" :src="questions.questions[q-1]['question']"/>
             <input type="file" @change="(e)=>uploadPhoto(e, (q-1))"/>
           </div>
           <div class="col-md-2"/>

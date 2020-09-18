@@ -9,7 +9,7 @@
         <ul class="list-unstyled components mb-5">
           <v-divider/> 
           <li class="">
-            <router-link :class="online?'live':'offline'" to="/liveVideo">الدرس الاون لاين<strong style="color:red;margin-left:46px;" v-if="online">Live</strong></router-link>
+            <router-link :aria-disabled="live" :class="online?'live':'offline'" to="/liveVideo">الدرس الاون لاين<strong style="color:red;margin-left:46px;" v-if="online">Live</strong></router-link>
           </li>
           <li class="active">
             <a @click="lessonsHandler" href="#"><span class="fa fa-home mr-3"></span> الدروس</a>
@@ -51,16 +51,16 @@ import axios from 'axios'
 export default {
     mounted() {
       this.refreshExamsList();
-      this.socket.on('live on', stage => {
-        var stagee = stage=='1'?'one':stage=='2'?'two':'three';
-          if(stagee==this.$store.getters.stage) {
+      this.socket.on('live', stage => {
+          if(stage==localStorage.getItem('stage')) {
             this.online = !this.online;
+            if(!this.live) this.online = false;
+            this.live = true;
           }
       })
-      this.socket.on('finish', on => {
-          if(on) {
-              this.online = false;
-            }
+      this.socket.on('finish', () => {
+            this.online = false;
+            this.live = false;
           })
         },
     created() {

@@ -40,9 +40,15 @@
             placeholder="Email"
             v-model = "email"
         />
+        <v-label>Whatsapp</v-label>
         <v-text-field
             placeholder="Whatsapp"
             v-model = "whatsapp"
+        />
+        <v-label>Youtube secret</v-label>
+        <v-text-field
+            placeholder="Youtube secret"
+            v-model = "youtubeSecret"
         />
         <v-btn @click="submit">Update</v-btn>
     </v-container>
@@ -62,6 +68,7 @@ export default {
             this.gmail = res.data.adminData.linkedin;
             this.email = res.data.adminData.email;
             this.whatsapp = res.data.adminData.whatsapp;
+            this.youtubeSecret = res.data.adminData.youtubeSecret;
         });
     },
     data() {
@@ -74,7 +81,8 @@ export default {
             facebook: '',
             linkedin: '',
             email: '',
-            whatsapp: ''
+            whatsapp: '',
+            youtubeSecret: ''
         }
     },
     methods: {
@@ -88,7 +96,8 @@ export default {
                 facebook: this.facebook, 
                 gmail: this.gmail, 
                 email: this.email, 
-                whatsapp: this.whatsapp
+                whatsapp: this.whatsapp,
+                youtubeSecret: this.youtubeSecret
                 }).then(res => {
                     console.log(res)
                     if(res.data.done) {

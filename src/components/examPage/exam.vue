@@ -24,10 +24,12 @@
                 <h4><Strong>({{exam.year+'/'+(exam.year+1)}})</strong> العام الدراسي</h4>
             </div>
             <div v-for="(section, s) in exam.sections" :key="s" class="section">
-                <h4 style="margin:20px;text-decoration:underline;color:#555">{{section.type}}</h4>
+                <h4 v-if="section.type.split('data').length===1" style="margin:20px;text-decoration:underline;color:#555">{{section.type}}</h4>
+                <img  v-if="section.type.split('data').length>1" :src="section.type"/>
                 <div style="margin-left: 40px;margin-top:10px;" v-for="(question, q) in section.questions" :key="q"  class="question">
                     <div class="examResultsQuestionAndDegree">
-                        <h5>{{q+1}}-{{question.question}}?</h5>
+                        <h5 v-if="question.question.split('data').length===1">{{q+1}}-{{question.question}}?</h5>
+                        <strong>{{q+1}}-</strong><img v-if="question.question.split('data').length>1" :src="question.question"/>
                         <v-textarea
                         v-if="question.choices.length===0"
                         v-model="solutionModel.sections[s].questions[q].answer"

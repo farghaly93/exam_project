@@ -33,7 +33,7 @@ Vue.use(VueHtmlToPaper, options);
 Vue.use(Vuelidate);
 Vue.use(VueRecord);
 Vue.use(VueMoment);
-axios.defaults.baseURL = url2;
+axios.defaults.baseURL = url1;
 axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
 Vue.config.productionTip = false
 
