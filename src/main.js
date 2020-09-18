@@ -17,7 +17,7 @@ import "../node_modules/popper.js/dist/popper.min.js"
 import "../node_modules/bootstrap/dist/js/bootstrap.js"
 
 const url1 = 'https://deutsch-lehrer.herokuapp.com';
-const url2 = 'http://localhost:5000'
+// const url2 = 'http://localhost:5000'
 
 const options = {
   name: '_blank',
