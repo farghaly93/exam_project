@@ -79,8 +79,8 @@ export default {
         ],
         data() {
           return {
-            socket: io('deutsch-lehrer.herokuapp.com'),
-            // socket: io('localhost:5000'),
+            // socket: io('deutsch-lehrer.herokuapp.com'),
+            socket: io('localhost:5000'),
             live: false,
             online: false,
           }
