@@ -1,137 +1,143 @@
 <template>
-<div class="container register">
-                <div class="row">
-                    <div class="col-md-3 register-left">
-                        <img src="https://i7.pngguru.com/preview/811/233/212/computer-icons-user-login-desktop-wallpaper-others.jpg" alt=""/>
-                        <h3 style="color:#ff9">مرحبا</h3>
-                        <p style="color:#fff">مرحبا بكم فى موقع القائد لامتحانات وتقييم اللغة الالمانية بالرجاء ادخال بياناتك صحيحة والتأكد منها وسيتم فى اول مرة يتم التسجيل فيها انتظار موافقة الاستاذ المشرف</p>
-                        <input v-if="way==='register'" type="submit" @click="switchMode" name="" :value="mode==='signin'?'Sign up':'Login'"/><br/>
-                    </div>
-                    <div class="col-md-9 register-right">
-                        <!-- <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Employee</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Hirer</a>
-                            </li>
-                        </ul> -->
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <h3 class="register-heading">{{way==='update'?'تعديل بيانات الطالب':mode==='signin'?'تسجيل الدخول':'انشاء حساب'}}</h3>
-                                <div class="row register-form">
-                                    <div class="col-md-6">
-                                        <div v-if="mode==='signup' || way==='update'" class="form-group">
-                                            <label>الأسم بالكامل</label>
-                                            <input
-                                              class="form-control"
-                                              v-model="fullname"
-                                              :counter="10"
-                                              placeholder="Full name"
-                                              required
-                                              @input="$v.fullname.$touch()"
-                                              @blur="$v.fullname.$touch()"
-                                            />
-                                            <p v-for="err in fullnameErrors" :key="err">{{err}}</p>
-                                        </div>
-                                        <div v-if="mode==='signup' || way==='update'" class="form-group">
-                                          <label>السنة الدراسية</label>
-                                            <select
-                                              id="stage"
-                                              class="form-control"
-                                                v-model="stage"
-                                                :counter="10"
-                                                placeholder="Stage"
-                                                required
-                                                @input="$v.stage.$touch()"
-                                                @blur="$v.stage.$touch()"
-                                              >
-                                              <option selected value="one">الصف الأول الثانوي</option>
-                                              <option selected value="two">الصف الثاني الثانوي</option>
-                                              <option selected value="three">الصف الثالث الثانوي</option>
-                                            </select>
-                                            <p v-for="err in stageErrors" :key="err">{{err}}</p>
-                                        </div>
-                                        <div v-if="mode==='signup' || way==='update'" class="form-group">
-                                          <label>رقم التليفون</label>
-                                            <input
-                                              class="form-control"
-                                              v-model="phone"
-                                              placeholder="Phone"
-                                              required
-                                              @input="$v.phone.$touch()"
-                                              @blur="$v.phone.$touch()"
-                                            />
-                                            <p v-for="err in phoneErrors" :key="err">{{err}}</p>
-                                        </div>
-                                        <div v-if="mode==='signup' || way==='update'" class="form-group">
-                                          <label>العنوان</label>
-                                            <input
-                                              class="form-control"
-                                              v-model="address"
-                                              placeholder="Address"
-                                              required
-                                              @input="$v.email.$touch()"
-                                              @blur="$v.address.$touch()"
-                                            />
-                                            <p v-for="err in addressErrors" :key="err">{{err}}</p>
-                                        </div>
-                                    </div>
-                                    <div :class="mode==='signin'?'col-md-12':'col-md-6'">
-                                        <div class="form-group">
-                                          <label>الايميل</label>
-                                            <input
-                                              class="form-control"
-                                              type="email"
-                                              v-model="email"
-                                              placeholder="Email"
-                                              required
-                                              @input="$v.email.$touch()"
-                                              @blur="$v.email.$touch()"
-                                            />
-                                            <p v-for="err in emailErrors" :key="err">{{err}}</p>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>كلمة المرور</label>
-                                            <input type="password"
-                                              class="form-control"
-                                              v-model="password"
-                                              placeholder="Password"
-                                              required
-                                              @input="$v.password.$touch()"
-                                              @blur="$v.password.$touch()"
-                                            />
-                                            <p v-for="err in passwordErrors" :key="err">{{err}}</p>
-                                        </div>
-                                        <div v-if="mode==='signup' || way==='update'" class="form-group">
-                                          <label>تأكيد كلمة المرور</label>
-                                            <input 
-                                              type='password'
-                                              class="form-control"
-                                              v-model="confirm"
-                                              label="Confirm password"
-                                              required
-                                              @input="$v.confirm.$touch()"
-                                              @blur="$v.confirm.$touch()"
-                                            />
-                                            <p v-for="err in confirmErrors" :key="err">{{err}}</p>
-                                        </div>
-                                        <app-loading v-if="authLoading"/>
-                                        <input 
-                                          type="submit"
-                                          :disabled="$v.$anyError" 
-                                          class="btnRegister" 
-                                          @click.prevent="() => {way==='update'?update():mode==='signin'?signin():signup()}"
-                                          value="تسجيل"
-                                         />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="container register-wrapper m-auto shadow p-0">
+    <div class="row">
+      <div class="col-md-6 d-flex justify-content-center align-items-center">
+          <img src="../../src/img/study.jpg" alt="" width="600" height="auto"/>
+      </div>
+      <div class="col-md-6" style="background: #fbfbfb;">
+          <!-- <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+              <li class="nav-item">
+                  <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Employee</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Hirer</a>
+              </li>
+          </ul> -->
+          <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <h3 class="register-heading">{{way==='update'?'تعديل بيانات الطالب':mode==='signin'?'تسجيل الدخول':'انشاء حساب'}}</h3>
+                  <p>بالرجاء ادخال بياناتك صحيحة والتأكد منها وسيتم فى اول مرة يتم التسجيل فيها انتظار موافقة الاستاذ المشرف</p>
+                  <div class="row register-form">
+                      <div class="col-md-6">
+                          <div v-if="mode==='signup' || way==='update'" class="form-group">
+                              <label>الإسم بالكامل</label>
+                              <input
+                                class="form-control"
+                                v-model="fullname"
+                                :counter="10"
+                                placeholder="الإسم بالكامل"
+                                required
+                                @input="$v.fullname.$touch()"
+                                @blur="$v.fullname.$touch()"
+                              />
+                              <p class="error-msg" v-for="err in fullnameErrors" :key="err">{{err}}</p>
+                          </div>
+                          <div v-if="mode==='signup' || way==='update'" class="form-group">
+                            <label>السنة الدراسية</label>
+                              <select
+                                id="stage"
+                                class="form-control"
+                                  v-model="stage"
+                                  :counter="10"
+                                  required
+                                  @input="$v.stage.$touch()"
+                                  @blur="$v.stage.$touch()"
+                                >
+                                <option selected disabled>السنة الدراسية</option>
+                                <option selected value="one">الصف الأول الثانوي</option>
+                                <option selected value="two">الصف الثاني الثانوي</option>
+                                <option selected value="three">الصف الثالث الثانوي</option>
+                              </select>
+                              <p class="error-msg" v-for="err in stageErrors" :key="err">{{err}}</p>
+                          </div>
+                          <div v-if="mode==='signup' || way==='update'" class="form-group">
+                            <label>رقم التليفون</label>
+                              <input
+                                class="form-control"
+                                v-model="phone"
+                                placeholder="رقم التليفون"
+                                required
+                                @input="$v.phone.$touch()"
+                                @blur="$v.phone.$touch()"
+                              />
+                              <p class="error-msg" v-for="err in phoneErrors" :key="err">{{err}}</p>
+                          </div>
+                          <div v-if="mode==='signup' || way==='update'" class="form-group">
+                            <label>العنوان</label>
+                              <input
+                                class="form-control"
+                                v-model="address"
+                                placeholder="العنوان"
+                                required
+                                @input="$v.email.$touch()"
+                                @blur="$v.address.$touch()"
+                              />
+                              <p class="error-msg" v-for="err in addressErrors" :key="err">{{err}}</p>
+                          </div>
+                      </div>
+                      <div :class="mode==='signin'?'col-md-12':'col-md-6'">
+                          <div class="form-group">
+                            <label>البريد الإلكتروني</label>
+                              <input
+                                class="form-control"
+                                type="email"
+                                v-model="email"
+                                placeholder="البريد الإلكتروني"
+                                required
+                                @input="$v.email.$touch()"
+                                @blur="$v.email.$touch()"
+                              />
+                              <p class="error-msg" v-for="err in emailErrors" :key="err">{{err}}</p>
+                          </div>
+                          <div class="form-group">
+                              <label>كلمة المرور</label>
+                              <input type="password"
+                                class="form-control"
+                                v-model="password"
+                                placeholder="كلمة المرور"
+                                required
+                                @input="$v.password.$touch()"
+                                @blur="$v.password.$touch()"
+                              />
+                              <p class="error-msg" v-for="err in passwordErrors" :key="err">{{err}}</p>
+                          </div>
+                          <div v-if="mode==='signup' || way==='update'" class="form-group">
+                            <label>تأكيد كلمة المرور</label>
+                              <input 
+                                type='password'
+                                class="form-control"
+                                v-model="confirm"
+                                placeholder="تأكيد كلمة المرور"
+                                required
+                                @input="$v.confirm.$touch()"
+                                @blur="$v.confirm.$touch()"
+                              />
+                              <p class="error-msg" v-for="err in confirmErrors" :key="err">{{err}}</p>
+                          </div>
+                          <app-loading v-if="authLoading"/>
+                          
+                      </div>
+                      <div class="col-12">
+                        <button
+                          :disabled="$v.$anyError" 
+                          class="btn btn-primary ml-2 btn-block" 
+                          @click.prevent="() => {way==='update'?update():mode==='signin'?signin():signup()}">
+                          {{ mode==='signin'?'تسجيل الدخول' : 'انشاء حساب'}}
+                        </button>
 
-            </div>
+                        <button
+                          class="btn btn-link btn-block"
+                          v-if="way==='register'"
+                          @click="switchMode">
+                          {{ mode==='signin' ? 'ليس لديك حساب اضغط هنا لانشاء حساب جديد' : 'لديك حساب اضغط هنا لتسجيل الدخول' }}
+                        </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -206,7 +212,7 @@ export default {
             fullnameErrors () {
               const errors = []
               if (!this.$v.fullname.$dirty) return errors
-              !this.$v.fullname.required && errors.push('الأسم بالكامل مطلوب')
+              !this.$v.fullname.required && errors.push('الاسم بالكامل مطلوب')
               !this.$v.fullname.minLen && errors.push('الاسم قصير')
               return errors
             },
@@ -233,8 +239,8 @@ export default {
             emailErrors () {
               const errors = []
               if (!this.$v.email.$dirty) return errors
-              !this.$v.email.required && errors.push('الأيميل مطلوب')
-              !this.$v.email.email && errors.push('الايميل غير صالح')
+              !this.$v.email.required && errors.push('البريد الإلكتروني مطلوب')
+              !this.$v.email.email && errors.push('البريد الإلكتروني غير صالح')
               return errors
             },
             passwordErrors () {
@@ -284,112 +290,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.register{
-    p {
-      color: #dc5959;
-      font-weight: bolder;
+.form-group {
+  .error-msg {
+    color: #dc3545;
+    margin-top: 5px;
+    &::before {
+      content: "\f06a";
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: 14px;
+      font-size: inherit;
+      text-rendering: auto;
+      -moz-osx-font-smoothing: grayscale;
+      margin-left: 5px;
     }
-    label {
-      color: #106c90;
-      font-weight: bolder;
-    }
-    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-    margin-top: 20%;
-    padding: 3%;
-    @media(max-width: 1000px) {
-      .register {
-        margin-top: 30%;
-      }
-    }
-}
-.register-left{
-    text-align: center;
-    color: #fff;
-    margin-top: 4%;
-}
-.register-left input{
-    border: none;
-    border-radius: 1.5rem;
-    padding: 2%;
-    width: 60%;
-    background: #f8f9fa;
-    font-weight: bold;
-    color: #383d41;
-    margin-top: 30%;
-    margin-bottom: 3%;
-    cursor: pointer;
-}
-.register-right{
-    background: #f8f9fa;
-    border-top-left-radius: 10% 50%;
-    border-bottom-left-radius: 10% 50%;
-}
-.register-left img{
-    margin-top: 15%;
-    margin-bottom: 5%;
-    width: 25%;
-    -webkit-animation: mover 2s infinite  alternate;
-    animation: mover 1s infinite  alternate;
-}
-@-webkit-keyframes mover {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-20px); }
-}
-@keyframes mover {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-20px); }
-}
-.register-left p{
-    font-weight: lighter;
-    padding: 12%;
-    margin-top: -9%;
-}
-.register .register-form{
-    padding: 10%;
-    margin-top: 10%;
-}
-.btnRegister{
-    float: right;
-    margin-top: 10%;
-    border: none;
-    border-radius: 1.5rem;
-    padding: 2%;
-    background: #0062cc;
-    color: #fff;
-    font-weight: 600;
-    width: 50%;
-    cursor: pointer;
-}
-.register .nav-tabs{
-    margin-top: 3%;
-    border: none;
-    background: #0062cc;
-    border-radius: 1.5rem;
-    width: 28%;
-    float: right;
-}
-.register .nav-tabs .nav-link{
-    padding: 2%;
-    height: 34px;
-    font-weight: 600;
-    color: #fff;
-    border-top-right-radius: 1.5rem;
-    border-bottom-right-radius: 1.5rem;
-}
-.register .nav-tabs .nav-link:hover{
-    border: none;
-}
-.register .nav-tabs .nav-link.active{
-    width: 100px;
-    color: #0062cc;
-    border: 2px solid #0062cc;
-    border-top-left-radius: 1.5rem;
-    border-bottom-left-radius: 1.5rem;
-}
-.register-heading{
-    text-align: center;
-    margin-top: 8%;
-    margin-bottom: -15%;
-    color: #495057;
+  }
 }
 </style>

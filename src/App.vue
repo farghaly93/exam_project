@@ -59,6 +59,8 @@
   body, html {
     /* padding: 5px; */
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    direction: rtl;
+    text-align: right !important;
   }
   .chat {
     position: fixed;
